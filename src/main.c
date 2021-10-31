@@ -7,6 +7,17 @@
 #define BUFFER_SIZE 1024
 #define AVAIL_BYTES BUFFER_SIZE * 8
 
+
+static void clean_str(char** str, uint32_t length) {
+  char* buff = *str;
+
+  for (uint32_t i = 0; i < length; i++) {
+    buff[i] = (buff[i] == '.' || buff[i] == '-' || buff[i] == '/' || buff[i] == ' ') ? '_' : buff[i];
+  }
+
+  *str = buff;
+}
+
 int main(int argc, char *argv[]) {
   if (argc < 3) {
     printf("Usage:\n"
@@ -17,6 +28,7 @@ int main(int argc, char *argv[]) {
 
   char *filename = argv[1];
   char *name = argv[2];
+  clean_str(&name, strlen(name));
 
   const char *head_template = "unsigned char %s[] = {";
   char *head = calloc(strlen(name) + strlen(head_template) + 1, sizeof(char));
